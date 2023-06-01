@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PrediccionSentiminetoBack.Migrations
 {
     [DbContext(typeof(PrediccionSentiminetoBackContext))]
-    [Migration("20230522010340_esquemaBD")]
-    partial class esquemaBD
+    [Migration("20230530205238_correcionIdsv2")]
+    partial class correcionIdsv2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,6 +80,8 @@ namespace PrediccionSentiminetoBack.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClienteId");
+
                     b.HasIndex("ProductoId");
 
                     b.ToTable("Comentario");
@@ -93,10 +95,7 @@ namespace PrediccionSentiminetoBack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoriID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CategoriaId")
+                    b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
@@ -156,6 +155,12 @@ namespace PrediccionSentiminetoBack.Migrations
 
             modelBuilder.Entity("PrediccionSentiminetoBack.Models.Comentario", b =>
                 {
+                    b.HasOne("PrediccionSentiminetoBack.Models.Cliente", null)
+                        .WithMany("Comentarios")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("PrediccionSentiminetoBack.Models.Producto", null)
                         .WithMany("Comentarios")
                         .HasForeignKey("ProductoId")
@@ -168,7 +173,8 @@ namespace PrediccionSentiminetoBack.Migrations
                     b.HasOne("PrediccionSentiminetoBack.Models.Categoria", null)
                         .WithMany("Productos")
                         .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrediccionSentiminetoBack.Models.Usuario", null)
                         .WithMany("Productos")
@@ -180,6 +186,11 @@ namespace PrediccionSentiminetoBack.Migrations
             modelBuilder.Entity("PrediccionSentiminetoBack.Models.Categoria", b =>
                 {
                     b.Navigation("Productos");
+                });
+
+            modelBuilder.Entity("PrediccionSentiminetoBack.Models.Cliente", b =>
+                {
+                    b.Navigation("Comentarios");
                 });
 
             modelBuilder.Entity("PrediccionSentiminetoBack.Models.Producto", b =>

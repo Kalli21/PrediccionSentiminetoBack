@@ -9,5 +9,6 @@ namespace PrediccionSentiminetoBack.Models
         [Required]
         public string? Nombre { get; set;}
         public virtual ICollection<Producto>? Productos { get; set; }
+        public string? UserName { get; set; }
     }
 }

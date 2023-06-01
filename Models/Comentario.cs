@@ -10,6 +10,7 @@ namespace PrediccionSentiminetoBack.Models
         public DateTime Fecha { get; set;}
         public int ProductoId { get; set; }
         public int ClienteId { get; set; }
+        public string? UserName { get; set; }
 
 
     }
