@@ -4,7 +4,7 @@
     {
 
         public int Id { get; set; }
-        public string? CodProduct { get; set; }
+        public string CodProducto { get; set; }
         public string? Nombre { get; set; }     
         public string? Descripcion { get; set; }       
         public float Precio { get; set; }

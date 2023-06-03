@@ -20,9 +20,18 @@ namespace PrediccionSentiminetoBack.Services
         {
             try
             {
-                ProductoDTO model = await _productoRepository.CreateProducto(productoDTO);
-                _response.Result = model;
-                return new CreatedAtActionResult("GetProducto", "Producto", new { id = model.Id }, model);
+                bool exist = await _productoRepository.ExisteInUser(productoDTO);
+                if (!exist)
+                {
+                    ProductoDTO model = await _productoRepository.CreateProducto(productoDTO);
+                    _response.Result = model;
+                    return new CreatedAtActionResult("GetProducto", "Producto", new { id = model.Id }, _response);
+                }
+                else {
+                    _response.IsSuccess = false;
+                    _response.DisplayMessage = "El Producto ya existe en el Usuario";
+                    return new BadRequestObjectResult(_response);
+                }
             }
             catch (Exception ex)
             {

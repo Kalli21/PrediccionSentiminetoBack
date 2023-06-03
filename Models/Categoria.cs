@@ -7,8 +7,8 @@ namespace PrediccionSentiminetoBack.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        public string? Nombre { get; set;}
+        public string Nombre { get; set;}
         public virtual ICollection<Producto>? Productos { get; set; }
-        public string? UserName { get; set; }
+        public string UserName { get; set; }
     }
 }

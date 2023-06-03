@@ -22,10 +22,20 @@ namespace PrediccionSentiminetoBack.Services
         {
             try
             {
-                ClienteDTO model = await _clienteRepository.CreateCliente(clienteDTO);
-                _response.Result = model;
-                return new CreatedAtActionResult("GetCliente", "Cliente", new { id = model.Id }, model);
-            }
+                bool exist = await _clienteRepository.ExisteInUser(clienteDTO);
+                if (!exist)
+                {
+                    ClienteDTO model = await _clienteRepository.CreateCliente(clienteDTO);
+                    _response.Result = model;
+                    return new CreatedAtActionResult("GetCliente", "Cliente", new { id = model.Id }, _response);
+                }
+                else
+                {
+                    _response.IsSuccess = false;
+                    _response.DisplayMessage = "El Cliente ya existe en el Usuario";
+                    return new BadRequestObjectResult(_response);
+                }
+                }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;

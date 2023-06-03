@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Repository;
 using PrediccionSentiminetoBack.Repository.Interfaces;
 using PrediccionSentiminetoBack.Services.Interfaces;
 
@@ -20,10 +21,20 @@ namespace PrediccionSentiminetoBack.Services
         {
             try
             {
-                CategoriaDTO model = await _categoriaRepository.CreateCategoria(categoriaDTO);
-                _response.Result = model;
-                return new CreatedAtActionResult("GetCategoria", "Categoria", new { id = model.Id }, model);
-            }
+                bool exist = await _categoriaRepository.ExisteInUser(categoriaDTO);
+                if (!exist)
+                {
+                    CategoriaDTO model = await _categoriaRepository.CreateCategoria(categoriaDTO);
+                    _response.Result = model;
+                    return new CreatedAtActionResult("GetCategoria", "Categoria", new { id = model.Id }, _response);
+                }
+                else
+                {
+                    _response.IsSuccess = false;
+                    _response.DisplayMessage = "La Categoria ya existe en el Usuario";
+                    return new BadRequestObjectResult(_response);
+                }
+                }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;

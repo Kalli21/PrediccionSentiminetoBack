@@ -22,7 +22,7 @@ namespace PrediccionSentiminetoBack.Services
             {
                 ComentarioDTO model = await _comentarioRepository.CreateComentario(comentarioDTO);
                 _response.Result = model;
-                return new CreatedAtActionResult("GetComentario", "Comentario", new { id = model.Id }, model);
+                return new CreatedAtActionResult("GetComentario", "Comentario", new { id = model.Id }, _response);
             }
             catch (Exception ex)
             {

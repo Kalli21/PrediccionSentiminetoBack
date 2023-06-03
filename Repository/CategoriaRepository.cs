@@ -41,7 +41,7 @@ namespace PrediccionSentiminetoBack.Repository
             {
                 return false;
             }
-        }
+        }        
 
         public async Task<CategoriaDTO> GetCategoriaById(int id)
         {
@@ -61,6 +61,16 @@ namespace PrediccionSentiminetoBack.Repository
             _db.Categoria.Update(categoria);
             await _db.SaveChangesAsync();
             return _mapper.Map<Categoria, CategoriaDTO>(categoria);
+        }
+        public async Task<bool> ExisteInUser(CategoriaDTO categoriaDTO)
+        {
+            if (await _db.Categoria.AnyAsync(x =>
+                x.UserName.ToLower().Equals(categoriaDTO.UserName.ToLower()) &&
+                x.Nombre.ToLower().Equals(categoriaDTO.Nombre.ToLower())))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

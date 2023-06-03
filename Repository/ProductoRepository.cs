@@ -41,7 +41,7 @@ namespace PrediccionSentiminetoBack.Repository
             {
                 return false;
             }
-        }
+        }        
 
         public async Task<ProductoDTO> GetProductoById(int id)
         {
@@ -61,6 +61,17 @@ namespace PrediccionSentiminetoBack.Repository
             _db.Producto.Update(producto);
             await _db.SaveChangesAsync();
             return _mapper.Map<Producto, ProductoDTO>(producto);
+        }
+
+        public async Task<bool> ExisteInUser(ProductoDTO productoDTO)
+        {
+            if (await _db.Producto.AnyAsync(x =>  
+                x.UsuarioId.Equals(productoDTO.UsuarioId) &&
+                x.CodProducto.ToLower().Equals(productoDTO.CodProducto.ToLower())))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

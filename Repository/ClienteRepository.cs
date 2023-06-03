@@ -43,6 +43,7 @@ namespace PrediccionSentiminetoBack.Repository
             }
         }
 
+
         public async Task<ClienteDTO> GetClienteById(int id)
         {
             Cliente cliente = await _db.Cliente.FindAsync(id);
@@ -63,6 +64,17 @@ namespace PrediccionSentiminetoBack.Repository
             await _db.SaveChangesAsync();
             return _mapper.Map<Cliente, ClienteDTO>(cliente);
         
+        }
+
+        public async Task<bool> ExisteInUser(ClienteDTO clienteDTO)
+        {
+            if (await _db.Cliente.AnyAsync(x =>
+                x.UserName.ToLower().Equals(clienteDTO.UserName.ToLower()) &&
+                x.CodCliente.ToLower().Equals(clienteDTO.CodCliente.ToLower())))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
