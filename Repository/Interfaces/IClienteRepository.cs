@@ -9,6 +9,8 @@ namespace PrediccionSentiminetoBack.Repository.Interfaces
         Task<ClienteDTO> CreateCliente(ClienteDTO clienteDTO);
         Task<ClienteDTO> UpdateCliente(ClienteDTO clienteDTO);
         Task<bool> DeleteCliente(int id);
-        Task<bool> ExisteInUser(ClienteDTO clienteDTO);
+        Task<ClienteDTO> ExisteInUser(ClienteDTO clienteDTO);
+        Task<ICollection<ClienteDTO>> GetClientesByUser(string username);
+        Task<ClienteDTO> GetClienteByIdByUser(string username, int id);
     }
 }

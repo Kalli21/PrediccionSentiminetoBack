@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Services;
 using PrediccionSentiminetoBack.Services.Interfaces;
 
 namespace PrediccionSentiminetoBack.Controllers
@@ -54,6 +55,20 @@ namespace PrediccionSentiminetoBack.Controllers
         public async Task<IActionResult> DeleteCliente(int id)
         {
             return await _clienteService.DeleteCliente(id);
+        }
+
+        // GET: api/Cliente/username
+        [HttpGet("username/{username}")]
+        public async Task<ActionResult<IEnumerable<ClienteDTO>>> GetClientesByUser(string username)
+        {
+            return await _clienteService.GetClientesByUser(username);
+        }
+
+        // GET: api/Cliente/username/5
+        [HttpGet("username/{username}/{id}")]
+        public async Task<ActionResult<ClienteDTO>> GetClienteByUserAndId(string username, int id)
+        {
+            return await _clienteService.GetClienteByIdByUser(username, id);
         }
 
     }

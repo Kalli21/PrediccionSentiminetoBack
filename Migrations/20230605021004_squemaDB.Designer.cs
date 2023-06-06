@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PrediccionSentiminetoBack.Migrations
 {
     [DbContext(typeof(PrediccionSentiminetoBackContext))]
-    [Migration("20230603065222_ModificacionAtributosv2")]
-    partial class ModificacionAtributosv2
+    [Migration("20230605021004_squemaDB")]
+    partial class squemaDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,21 @@ namespace PrediccionSentiminetoBack.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CategoriaProducto", b =>
+                {
+                    b.Property<int>("CategoriasId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductosId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoriasId", "ProductosId");
+
+                    b.HasIndex("ProductosId");
+
+                    b.ToTable("CategoriaProducto");
+                });
 
             modelBuilder.Entity("PrediccionSentiminetoBack.Models.Categoria", b =>
                 {
@@ -37,6 +52,7 @@ namespace PrediccionSentiminetoBack.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -53,6 +69,7 @@ namespace PrediccionSentiminetoBack.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CodCliente")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
@@ -60,6 +77,7 @@ namespace PrediccionSentiminetoBack.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -107,10 +125,8 @@ namespace PrediccionSentiminetoBack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoriaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CodProduct")
+                    b.Property<string>("CodProducto")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Descripcion")
@@ -129,8 +145,6 @@ namespace PrediccionSentiminetoBack.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoriaId");
 
                     b.HasIndex("UsuarioId");
 
@@ -171,6 +185,21 @@ namespace PrediccionSentiminetoBack.Migrations
                     b.ToTable("Usuario");
                 });
 
+            modelBuilder.Entity("CategoriaProducto", b =>
+                {
+                    b.HasOne("PrediccionSentiminetoBack.Models.Categoria", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriasId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrediccionSentiminetoBack.Models.Producto", null)
+                        .WithMany()
+                        .HasForeignKey("ProductosId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrediccionSentiminetoBack.Models.Comentario", b =>
                 {
                     b.HasOne("PrediccionSentiminetoBack.Models.Cliente", null)
@@ -188,22 +217,11 @@ namespace PrediccionSentiminetoBack.Migrations
 
             modelBuilder.Entity("PrediccionSentiminetoBack.Models.Producto", b =>
                 {
-                    b.HasOne("PrediccionSentiminetoBack.Models.Categoria", null)
-                        .WithMany("Productos")
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("PrediccionSentiminetoBack.Models.Usuario", null)
                         .WithMany("Productos")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PrediccionSentiminetoBack.Models.Categoria", b =>
-                {
-                    b.Navigation("Productos");
                 });
 
             modelBuilder.Entity("PrediccionSentiminetoBack.Models.Cliente", b =>

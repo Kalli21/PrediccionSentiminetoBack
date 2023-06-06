@@ -9,5 +9,7 @@ namespace PrediccionSentiminetoBack.Repository.Interfaces
         Task<ComentarioDTO> CreateComentario(ComentarioDTO comentarioDTO);
         Task<ComentarioDTO> UpdateComentario(ComentarioDTO comentarioDTO);
         Task<bool> DeleteComentario(int id);
+        Task<ICollection<ComentarioDTO>> GetComentariosByUser(string username);
+        Task<ComentarioDTO> GetComentarioByIdByUser(string username, int id);
     }
 }

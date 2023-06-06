@@ -10,5 +10,7 @@ namespace PrediccionSentiminetoBack.Services.Interfaces
         Task<ActionResult<ProductoDTO>> CreateProducto(ProductoDTO productoDTO);
         Task<IActionResult> UpdateProducto(int id, ProductoDTO productoDTO);
         Task<IActionResult> DeleteProducto(int id);
+        Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductosByUser(int userid);
+        Task<ActionResult<ProductoDTO>> GetProductoByIdByUser(int userid, int id);
     }
 }

@@ -29,7 +29,7 @@ namespace PrediccionSentiminetoBack.Services
                 _response.IsSuccess = false;
                 _response.DisplayMessage = "Error al registrar el categoria";
                 _response.ErrorMessages = new List<string> { ex.ToString() };
-                return new BadRequestObjectResult(_response);
+                return new OkObjectResult(_response);
             }
         }
 
@@ -41,7 +41,7 @@ namespace PrediccionSentiminetoBack.Services
                 if (eliminado)
                 {
                     _response.Result = eliminado;
-                    _response.DisplayMessage = "Comentario eliminada con exito";
+                    _response.DisplayMessage = "Comentario eliminado con exito";
                     return new OkObjectResult(_response);
                 }
                 else
@@ -66,7 +66,7 @@ namespace PrediccionSentiminetoBack.Services
             if (categoria == null)
             {
                 _response.IsSuccess = false;
-                _response.DisplayMessage = "La Comentario no Existe";
+                _response.DisplayMessage = "El Comentario no Existe";
                 return new NotFoundObjectResult(_response);
 
             }
@@ -95,6 +95,7 @@ namespace PrediccionSentiminetoBack.Services
             return new OkObjectResult(_response);
         }
 
+     
         public async Task<IActionResult> UpdateComentario(int id, ComentarioDTO comentarioDTO)
         {
             try
@@ -116,6 +117,41 @@ namespace PrediccionSentiminetoBack.Services
                 return new BadRequestObjectResult(_response);
             }
         }
+        public async Task<ActionResult<ComentarioDTO>> GetComentarioByIdByUser(string username, int id)
+        {
+            var categoria = await _comentarioRepository.GetComentarioByIdByUser(username,id);
+            if (categoria == null)
+            {
+                _response.IsSuccess = false;
+                _response.DisplayMessage = "El Comentario no Existe en el usuario";
+                return new NotFoundObjectResult(_response);
+
+            }
+            else
+            {
+                _response.Result = categoria;
+                _response.DisplayMessage = "Información del comentario";
+                return new OkObjectResult(_response);
+            }
+        }
+
+        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByUser(string username)
+        {
+            try
+            {
+                var lista = await _comentarioRepository.GetComentariosByUser(username);
+                _response.Result = lista;
+                _response.DisplayMessage = "Lista de Comentarios del usuario";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+
+            return new OkObjectResult(_response);
+        }
+
     }
 }
 

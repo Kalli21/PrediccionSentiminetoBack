@@ -22,7 +22,7 @@ using PrediccionSentiminetoBack.Models;
 
         }
 
-        public DbSet<PrediccionSentiminetoBack.Models.Categoria> Categoria { get; set; } = default!;
+        public DbSet<PrediccionSentiminetoBack.Models.Categoria>? Categoria { get; set; }
 
         public DbSet<PrediccionSentiminetoBack.Models.Cliente>? Cliente { get; set; }
 

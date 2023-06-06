@@ -9,6 +9,8 @@ namespace PrediccionSentiminetoBack.Repository.Interfaces
         Task<ProductoDTO> CreateProducto(ProductoDTO productoDTO);
         Task<ProductoDTO> UpdateProducto(ProductoDTO productoDTO);
         Task<bool> DeleteProducto(int id);
-        Task<bool> ExisteInUser(ProductoDTO productoDTO);
+        Task<ProductoDTO> ExisteInUser(ProductoDTO productoDTO);
+        Task<ICollection<ProductoDTO>> GetProductosByUser(int userid);
+        Task<ProductoDTO> GetProductoByIdByUser(int userid, int id);
     }
 }

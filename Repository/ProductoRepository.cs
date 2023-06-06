@@ -45,7 +45,7 @@ namespace PrediccionSentiminetoBack.Repository
 
         public async Task<ProductoDTO> GetProductoById(int id)
         {
-            Producto producto = await _db.Producto.FindAsync(id);
+            Producto producto = await _db.Producto.Include(c => c.Categorias).FirstOrDefaultAsync(c => c.Id == id);
             return _mapper.Map<ProductoDTO>(producto);
         }
 
@@ -63,15 +63,28 @@ namespace PrediccionSentiminetoBack.Repository
             return _mapper.Map<Producto, ProductoDTO>(producto);
         }
 
-        public async Task<bool> ExisteInUser(ProductoDTO productoDTO)
+        public async Task<ProductoDTO> ExisteInUser(ProductoDTO productoDTO)
         {
-            if (await _db.Producto.AnyAsync(x =>  
+            var producto = await _db.Producto.Include( c => c.Categorias).FirstOrDefaultAsync(x =>
                 x.UsuarioId.Equals(productoDTO.UsuarioId) &&
-                x.CodProducto.ToLower().Equals(productoDTO.CodProducto.ToLower())))
+                x.CodProducto.ToLower().Equals(productoDTO.CodProducto.ToLower()));
+            if (producto != null)
             {
-                return true;
+                return _mapper.Map<Producto, ProductoDTO>(producto);
             }
-            return false;
+            return null;
+        }
+
+        public async Task<ICollection<ProductoDTO>> GetProductosByUser(int userid)
+        {
+            ICollection<Producto> productos = await _db.Producto.Where(c => c.UsuarioId == userid).ToListAsync();
+            return _mapper.Map<ICollection<ProductoDTO>>(productos);
+        }
+
+        public async Task<ProductoDTO> GetProductoByIdByUser(int userid, int id)
+        {
+            Producto producto = await _db.Producto.Include(c => c.Categorias).FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userid);
+            return _mapper.Map<ProductoDTO>(producto);
         }
     }
 }

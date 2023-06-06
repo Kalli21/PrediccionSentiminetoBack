@@ -10,5 +10,7 @@ namespace PrediccionSentiminetoBack.Services.Interfaces
         Task<ActionResult<ClienteDTO>> CreateCliente(ClienteDTO clienteDTO);
         Task<IActionResult> UpdateCliente(int id, ClienteDTO clienteDTO);
         Task<IActionResult> DeleteCliente(int id);
+        Task<ActionResult<IEnumerable<ClienteDTO>>> GetClientesByUser(string username);
+        Task<ActionResult<ClienteDTO>> GetClienteByIdByUser(string username,int id);
     }
 }

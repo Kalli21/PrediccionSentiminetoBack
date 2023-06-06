@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PrediccionSentiminetoBack.Migrations
 {
     /// <inheritdoc />
-    public partial class esquemaBD : Migration
+    public partial class squemaDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,8 @@ namespace PrediccionSentiminetoBack.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +31,9 @@ namespace PrediccionSentiminetoBack.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CodCliente = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,26 +64,44 @@ namespace PrediccionSentiminetoBack.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CodProducto = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Precio = table.Column<float>(type: "real", nullable: false),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    CategoriID = table.Column<int>(type: "int", nullable: false),
-                    CategoriaId = table.Column<int>(type: "int", nullable: true)
+                    UrlImg = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Producto", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Producto_Categoria_CategoriaId",
-                        column: x => x.CategoriaId,
+                        name: "FK_Producto_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoriaProducto",
+                columns: table => new
+                {
+                    CategoriasId = table.Column<int>(type: "int", nullable: false),
+                    ProductosId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoriaProducto", x => new { x.CategoriasId, x.ProductosId });
+                    table.ForeignKey(
+                        name: "FK_CategoriaProducto_Categoria_CategoriasId",
+                        column: x => x.CategoriasId,
                         principalTable: "Categoria",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Producto_Usuario_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "Usuario",
+                        name: "FK_CategoriaProducto_Producto_ProductosId",
+                        column: x => x.ProductosId,
+                        principalTable: "Producto",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -94,11 +115,18 @@ namespace PrediccionSentiminetoBack.Migrations
                     Contenido = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProductoId = table.Column<int>(type: "int", nullable: false),
-                    ClienteId = table.Column<int>(type: "int", nullable: false)
+                    ClienteId = table.Column<int>(type: "int", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comentario", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comentario_Cliente_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Cliente",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Comentario_Producto_ProductoId",
                         column: x => x.ProductoId,
@@ -108,14 +136,19 @@ namespace PrediccionSentiminetoBack.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_CategoriaProducto_ProductosId",
+                table: "CategoriaProducto",
+                column: "ProductosId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comentario_ClienteId",
+                table: "Comentario",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comentario_ProductoId",
                 table: "Comentario",
                 column: "ProductoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Producto_CategoriaId",
-                table: "Producto",
-                column: "CategoriaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Producto_UsuarioId",
@@ -127,16 +160,19 @@ namespace PrediccionSentiminetoBack.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Cliente");
+                name: "CategoriaProducto");
 
             migrationBuilder.DropTable(
                 name: "Comentario");
 
             migrationBuilder.DropTable(
-                name: "Producto");
+                name: "Categoria");
 
             migrationBuilder.DropTable(
-                name: "Categoria");
+                name: "Cliente");
+
+            migrationBuilder.DropTable(
+                name: "Producto");
 
             migrationBuilder.DropTable(
                 name: "Usuario");

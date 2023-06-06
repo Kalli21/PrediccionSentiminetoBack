@@ -21,8 +21,8 @@ namespace PrediccionSentiminetoBack.Services
         {
             try
             {
-                bool exist = await _categoriaRepository.ExisteInUser(categoriaDTO);
-                if (!exist)
+                CategoriaDTO exist = await _categoriaRepository.ExisteInUser(categoriaDTO);
+                if (exist==null)
                 {
                     CategoriaDTO model = await _categoriaRepository.CreateCategoria(categoriaDTO);
                     _response.Result = model;
@@ -31,8 +31,9 @@ namespace PrediccionSentiminetoBack.Services
                 else
                 {
                     _response.IsSuccess = false;
+                    _response.Result = exist;
                     _response.DisplayMessage = "La Categoria ya existe en el Usuario";
-                    return new BadRequestObjectResult(_response);
+                    return new OkObjectResult(_response);
                 }
                 }
             catch (Exception ex)
@@ -125,6 +126,58 @@ namespace PrediccionSentiminetoBack.Services
                 _response.DisplayMessage = "Error al actualizar el categoria";
                 _response.ErrorMessages = new List<string> { ex.ToString() };
                 return new BadRequestObjectResult(_response);
+            }
+        }        
+
+        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasByUser(string username)
+        {
+            try
+            {
+                var lista = await _categoriaRepository.GetCategoriasByUser(username);
+                _response.Result = lista;
+                _response.DisplayMessage = "Lista de Categorias por usuario";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+
+            return new OkObjectResult(_response);
+        }
+        public async Task<ActionResult<CategoriaDTO>> GetCategoriaByIdByUser(string usernamem, int id)
+        {
+            var categoria = await _categoriaRepository.GetCategoriaByIdByUser(usernamem,id);
+            if (categoria == null)
+            {
+                _response.IsSuccess = false;
+                _response.DisplayMessage = "La Categoria del usuario no Existe";
+                return new NotFoundObjectResult(_response);
+
+            }
+            else
+            {
+                _response.Result = categoria;
+                _response.DisplayMessage = "Información de la categoria del usuario";
+                return new OkObjectResult(_response);
+            }
+        }
+
+        public async Task<ActionResult<CategoriaDTO>> GetCategoriaByNameByUser(string usernamem, string name)
+        {
+            var categoria = await _categoriaRepository.GetCategoriaByNameByUser(usernamem, name);
+            if (categoria == null)
+            {
+                _response.IsSuccess = false;
+                _response.DisplayMessage = "La Categoria del usuario no Existe";
+                return new NotFoundObjectResult(_response);
+
+            }
+            else
+            {
+                _response.Result = categoria;
+                _response.DisplayMessage = "Información de la categoria del usuario";
+                return new OkObjectResult(_response);
             }
         }
     }

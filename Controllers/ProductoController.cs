@@ -62,5 +62,19 @@ namespace PrediccionSentiminetoBack.Controllers
             return await _productoService.DeleteProducto(id);
         }
 
+        // GET: api/Producto/username
+        [HttpGet("username/{userid}")]
+        public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductosByUser(int userid)
+        {
+            return await _productoService.GetProductosByUser(userid);
+        }
+
+        // GET: api/Producto/username/5
+        [HttpGet("username/{userid}/{id}")]
+        public async Task<ActionResult<ProductoDTO>> GetProductoByUserAndId(int userid, int id)
+        {   
+            return await _productoService.GetProductoByIdByUser(userid, id);
+        }
+
     }
 }

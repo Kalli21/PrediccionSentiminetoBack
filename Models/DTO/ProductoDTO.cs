@@ -10,7 +10,8 @@
         public float Precio { get; set; }
         public string? UrlImg { get; set; }
         public int UsuarioId { get; set; }
-        public int CategoriaId { get; set; }
+        //public int CategoriaId { get; set; }
+        public virtual ICollection<Categoria>? Categorias { get; set; }
         public virtual ICollection<Comentario>? Comentarios { get; set; }
        
     }

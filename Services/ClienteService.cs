@@ -22,8 +22,8 @@ namespace PrediccionSentiminetoBack.Services
         {
             try
             {
-                bool exist = await _clienteRepository.ExisteInUser(clienteDTO);
-                if (!exist)
+                ClienteDTO exist = await _clienteRepository.ExisteInUser(clienteDTO);
+                if (exist==null)
                 {
                     ClienteDTO model = await _clienteRepository.CreateCliente(clienteDTO);
                     _response.Result = model;
@@ -32,8 +32,9 @@ namespace PrediccionSentiminetoBack.Services
                 else
                 {
                     _response.IsSuccess = false;
+                    _response.Result = exist;
                     _response.DisplayMessage = "El Cliente ya existe en el Usuario";
-                    return new BadRequestObjectResult(_response);
+                    return new OkObjectResult(_response);
                 }
                 }
             catch (Exception ex)
@@ -128,5 +129,40 @@ namespace PrediccionSentiminetoBack.Services
                 return new BadRequestObjectResult(_response);
             }
         }
+
+        public async Task<ActionResult<IEnumerable<ClienteDTO>>> GetClientesByUser(string username)
+        {
+            try
+            {
+                var lista = await _clienteRepository.GetClientesByUser(username);
+                _response.Result = lista;
+                _response.DisplayMessage = "Lista de clientes del usuario";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+
+            return new OkObjectResult(_response);
+        }
+        public async Task<ActionResult<ClienteDTO>> GetClienteByIdByUser(string username, int id)
+        {
+            var cliente = await _clienteRepository.GetClienteByIdByUser(username,id);
+            if (cliente == null)
+            {
+                _response.IsSuccess = false;
+                _response.DisplayMessage = "La Categoria no Existe en el usuario";
+                return new NotFoundObjectResult(_response);
+
+            }
+            else
+            {
+                _response.Result = cliente;
+                _response.DisplayMessage = "Información del cliente del usuario";
+                return new OkObjectResult(_response);
+            }
+        }
+
     }
 }

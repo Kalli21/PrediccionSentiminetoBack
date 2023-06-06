@@ -10,6 +10,9 @@ namespace PrediccionSentiminetoBack.Services.Interfaces
         Task<ActionResult<CategoriaDTO>> CreateCategoria(CategoriaDTO categoriaDTO);
         Task<IActionResult> UpdateCategoria(int id, CategoriaDTO categoriaDTO);
         Task<IActionResult> DeleteCategoria(int id);
+        Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasByUser(string username);
+        Task<ActionResult<CategoriaDTO>> GetCategoriaByIdByUser(string usernamem,int id);
+        Task<ActionResult<CategoriaDTO>> GetCategoriaByNameByUser(string usernamem, string name);
 
     }
 }

@@ -20,8 +20,8 @@ namespace PrediccionSentiminetoBack.Services
         {
             try
             {
-                bool exist = await _productoRepository.ExisteInUser(productoDTO);
-                if (!exist)
+                ProductoDTO exist = await _productoRepository.ExisteInUser(productoDTO);
+                if (exist==null)
                 {
                     ProductoDTO model = await _productoRepository.CreateProducto(productoDTO);
                     _response.Result = model;
@@ -29,8 +29,9 @@ namespace PrediccionSentiminetoBack.Services
                 }
                 else {
                     _response.IsSuccess = false;
+                    _response.Result = exist;
                     _response.DisplayMessage = "El Producto ya existe en el Usuario";
-                    return new BadRequestObjectResult(_response);
+                    return new OkObjectResult(_response);
                 }
             }
             catch (Exception ex)
@@ -125,5 +126,41 @@ namespace PrediccionSentiminetoBack.Services
                 return new BadRequestObjectResult(_response);
             }
         }
+
+        public async Task<ActionResult<ProductoDTO>> GetProductoByIdByUser(int userid, int id)
+        {
+            var producto = await _productoRepository.GetProductoByIdByUser(userid,id);
+            if (producto == null)
+            {
+                _response.IsSuccess = false;
+                _response.DisplayMessage = "El Producto no Existe";
+                return new NotFoundObjectResult(_response);
+
+            }
+            else
+            {
+                _response.Result = producto;
+                _response.DisplayMessage = "Información del producto";
+                return new OkObjectResult(_response);
+            }
+        }
+
+        public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductosByUser(int userid)
+        {
+            try
+            {
+                var lista = await _productoRepository.GetProductosByUser(userid);
+                _response.Result = lista;
+                _response.DisplayMessage = "Lista de Productos del usuario";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+
+            return new OkObjectResult(_response);
+        }
+
     }
 }

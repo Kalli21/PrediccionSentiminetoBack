@@ -10,5 +10,7 @@ namespace PrediccionSentiminetoBack.Services.Interfaces
         Task<ActionResult<ComentarioDTO>> CreateComentario(ComentarioDTO comentarioDTO);
         Task<IActionResult> UpdateComentario(int id, ComentarioDTO comentarioDTO);
         Task<IActionResult> DeleteComentario(int id);
+        Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByUser(string username);
+        Task<ActionResult<ComentarioDTO>> GetComentarioByIdByUser(string username, int id);
     }
 }

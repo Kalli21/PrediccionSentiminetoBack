@@ -45,7 +45,7 @@ namespace PrediccionSentiminetoBack.Repository
 
         public async Task<CategoriaDTO> GetCategoriaById(int id)
         {
-            Categoria categoria = await _db.Categoria.FindAsync(id);
+            Categoria categoria = await _db.Categoria.Include(c => c.Productos).FirstOrDefaultAsync( c => c.Id == id);
             return _mapper.Map<CategoriaDTO>(categoria);
         }
 
@@ -62,15 +62,35 @@ namespace PrediccionSentiminetoBack.Repository
             await _db.SaveChangesAsync();
             return _mapper.Map<Categoria, CategoriaDTO>(categoria);
         }
-        public async Task<bool> ExisteInUser(CategoriaDTO categoriaDTO)
+        public async Task<CategoriaDTO> ExisteInUser(CategoriaDTO categoriaDTO)
         {
-            if (await _db.Categoria.AnyAsync(x =>
+            var categoria = await _db.Categoria.FirstOrDefaultAsync(x =>
                 x.UserName.ToLower().Equals(categoriaDTO.UserName.ToLower()) &&
-                x.Nombre.ToLower().Equals(categoriaDTO.Nombre.ToLower())))
+                x.Nombre.ToLower().Equals(categoriaDTO.Nombre.ToLower()));
+            if (categoria != null)
             {
-                return true;
+                return _mapper.Map<Categoria, CategoriaDTO>(categoria);
             }
-            return false;
+
+            return null;
+        }
+
+        public async Task<ICollection<CategoriaDTO>> GetCategoriasByUser(string username)
+        {
+            ICollection<Categoria> categorias = await _db.Categoria.Where(c => c.UserName == username).ToListAsync();
+            return _mapper.Map<ICollection<CategoriaDTO>>(categorias);
+        }
+
+        public async Task<CategoriaDTO> GetCategoriaByIdByUser(string username, int id)
+        {
+            Categoria categoria = await _db.Categoria.Include(c => c.Productos).FirstOrDefaultAsync(c => c.Id == id && c.UserName == username);
+            return _mapper.Map<CategoriaDTO>(categoria);
+        }
+
+        public async Task<CategoriaDTO> GetCategoriaByNameByUser(string username, string name)
+        {
+            Categoria categoria = await _db.Categoria.Include(c => c.Productos).FirstOrDefaultAsync(c => c.Nombre == name && c.UserName == username);
+            return _mapper.Map<CategoriaDTO>(categoria);
         }
     }
 }

@@ -62,5 +62,26 @@ namespace PrediccionSentiminetoBack.Controllers
             return await _categoriaService.DeleteCategoria(id);
         }
 
+        // GET: api/Categoria/username
+        [HttpGet("username/{username}")]
+        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriaByUser(string username)
+        {
+            return await _categoriaService.GetCategoriasByUser(username);
+        }
+
+        // GET: api/Categoria/username/5
+        [HttpGet("username/{username}/{id}")]
+        public async Task<ActionResult<CategoriaDTO>> GetCategoriaByUserAndId(string username, int id)
+        {
+            return await _categoriaService.GetCategoriaByIdByUser(username, id);
+        }
+
+        // GET: api/Categoria/username/name
+        [HttpGet("username/cat/{username}/{name}")]
+        public async Task<ActionResult<CategoriaDTO>> GetCategoriaByNameAndId(string username, string name)
+        {
+            return await _categoriaService.GetCategoriaByNameByUser(username, name);
+        }
+
     }
 }

@@ -61,5 +61,18 @@ namespace PrediccionSentiminetoBack.Repository
             await _db.SaveChangesAsync();
             return _mapper.Map<Comentario, ComentarioDTO>(comentario);
         }
+
+        public async Task<ICollection<ComentarioDTO>> GetComentariosByUser(string username)
+        {
+            ICollection<Comentario> comentarios = await _db.Comentario.Where(c => c.UserName == username).ToListAsync();
+            return _mapper.Map<ICollection<ComentarioDTO>>(comentarios);
+        }
+        public async Task<ComentarioDTO> GetComentarioByIdByUser(string username, int id)
+        {
+            Comentario comentario = await _db.Comentario.FirstOrDefaultAsync(c => c.Id == id && c.UserName == username);
+            return _mapper.Map<ComentarioDTO>(comentario);
+        }
+
+
     }
 }

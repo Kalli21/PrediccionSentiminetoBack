@@ -9,6 +9,9 @@ namespace PrediccionSentiminetoBack.Repository.Interfaces
         Task<CategoriaDTO> CreateCategoria(CategoriaDTO categoriaDTO);
         Task<CategoriaDTO> UpdateCategoria(CategoriaDTO categoriaDTO);
         Task<bool> DeleteCategoria(int id);
-        Task<bool> ExisteInUser(CategoriaDTO categoriaDTO);
+        Task<CategoriaDTO> ExisteInUser(CategoriaDTO categoriaDTO);
+        Task<ICollection<CategoriaDTO>> GetCategoriasByUser(string username);
+        Task<CategoriaDTO> GetCategoriaByIdByUser(string username,int id);
+        Task<CategoriaDTO> GetCategoriaByNameByUser(string username, string name);
     }
 }

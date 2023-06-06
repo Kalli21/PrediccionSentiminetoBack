@@ -5,7 +5,7 @@
 namespace PrediccionSentiminetoBack.Migrations
 {
     /// <inheritdoc />
-    public partial class ModificacionVerificacionExistv3 : Migration
+    public partial class squemaDBv3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

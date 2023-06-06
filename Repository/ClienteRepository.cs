@@ -66,15 +66,28 @@ namespace PrediccionSentiminetoBack.Repository
         
         }
 
-        public async Task<bool> ExisteInUser(ClienteDTO clienteDTO)
+        public async Task<ClienteDTO> ExisteInUser(ClienteDTO clienteDTO)
         {
-            if (await _db.Cliente.AnyAsync(x =>
+            var cliente = await _db.Cliente.FirstOrDefaultAsync(x =>
                 x.UserName.ToLower().Equals(clienteDTO.UserName.ToLower()) &&
-                x.CodCliente.ToLower().Equals(clienteDTO.CodCliente.ToLower())))
+                x.CodCliente.ToLower().Equals(clienteDTO.CodCliente.ToLower()));
+            if ( cliente!=null )
             {
-                return true;
+                return _mapper.Map<Cliente, ClienteDTO>(cliente);
             }
-            return false;
+            return null;
+        }
+
+        public async Task<ICollection<ClienteDTO>> GetClientesByUser(string username)
+        {
+            ICollection<Cliente> clientes = await _db.Cliente.Where(c => c.UserName == username).ToListAsync();
+            return _mapper.Map<ICollection<ClienteDTO>>(clientes);
+        }
+
+        public async Task<ClienteDTO> GetClienteByIdByUser(string username, int id)
+        {
+            Cliente cliente = await _db.Cliente.FirstOrDefaultAsync(c => c.Id == id && c.UserName == username);
+            return _mapper.Map<ClienteDTO>(cliente);
         }
     }
 }

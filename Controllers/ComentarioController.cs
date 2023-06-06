@@ -63,5 +63,19 @@ namespace PrediccionSentiminetoBack.Controllers
             return await _comentarioService.DeleteComentario(id);
         }
 
+        // GET: api/Comentario/username
+        [HttpGet("username/{username}")]
+        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetCategoriaByUser(string username)
+        {
+            return await _comentarioService.GetComentariosByUser(username);
+        }
+
+        // GET: api/Comentario/username/5
+        [HttpGet("username/{username}/{id}")]
+        public async Task<ActionResult<ComentarioDTO>> GetCategoriaByUserAndId(string username, int id)
+        {
+            return await _comentarioService.GetComentarioByIdByUser(username, id);
+        }
+
     }
 }
