@@ -12,5 +12,8 @@ namespace PrediccionSentiminetoBack.Repository.Interfaces
         Task<ProductoDTO> ExisteInUser(ProductoDTO productoDTO);
         Task<ICollection<ProductoDTO>> GetProductosByUser(int userid);
         Task<ProductoDTO> GetProductoByIdByUser(int userid, int id);
+
+        Task<ICollection<ProductoDTO>> GetProductosByUserByName(int userid, string nombre);
+
     }
 }

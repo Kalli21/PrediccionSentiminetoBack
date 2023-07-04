@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Models.Request;
+using System.Drawing.Printing;
 
 namespace PrediccionSentiminetoBack.Services.Interfaces
 {
@@ -10,7 +12,9 @@ namespace PrediccionSentiminetoBack.Services.Interfaces
         Task<ActionResult<ComentarioDTO>> CreateComentario(ComentarioDTO comentarioDTO);
         Task<IActionResult> UpdateComentario(int id, ComentarioDTO comentarioDTO);
         Task<IActionResult> DeleteComentario(int id);
-        Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByUser(string username);
+        Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByUser(string username, ComentariosFiltros filtros);
+        Task<ActionResult<int>> GetCantComentariosByUser(string username);
         Task<ActionResult<ComentarioDTO>> GetComentarioByIdByUser(string username, int id);
+        Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByuserByPaginacion(string username, int page, int pageSize);
     }
 }

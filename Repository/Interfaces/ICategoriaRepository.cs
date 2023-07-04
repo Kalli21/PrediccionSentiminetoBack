@@ -13,5 +13,7 @@ namespace PrediccionSentiminetoBack.Repository.Interfaces
         Task<ICollection<CategoriaDTO>> GetCategoriasByUser(string username);
         Task<CategoriaDTO> GetCategoriaByIdByUser(string username,int id);
         Task<CategoriaDTO> GetCategoriaByNameByUser(string username, string name);
+        Task<ICollection<CategoriaDTO>> GetCategoriasByUserConComentarios(string username, DateTime? ini, DateTime? fin);
+        Task<ICollection<CategoriaDTO>> GetCategoriasByUserConComentariosFiltroIds(string username, DateTime? ini, DateTime? fin, ICollection<int> categoriasIds);
     }
 }

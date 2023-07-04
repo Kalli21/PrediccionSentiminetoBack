@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrediccionSentiminetoBack.Models;
 using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Models.Request;
 using PrediccionSentiminetoBack.Services;
 using PrediccionSentiminetoBack.Services.Interfaces;
 
@@ -63,10 +64,10 @@ namespace PrediccionSentiminetoBack.Controllers
         }
 
         // GET: api/Producto/username
-        [HttpGet("username/{userid}")]
-        public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductosByUser(int userid)
+        [HttpPost("username/{userid}")]
+        public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductosByUser(int userid,ProductosFiltros filtros)
         {
-            return await _productoService.GetProductosByUser(userid);
+            return await _productoService.GetProductosByUser(userid, filtros);
         }
 
         // GET: api/Producto/username/5

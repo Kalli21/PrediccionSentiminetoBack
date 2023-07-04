@@ -92,5 +92,24 @@ namespace PrediccionSentiminetoBack.Repository
             Categoria categoria = await _db.Categoria.Include(c => c.Productos).FirstOrDefaultAsync(c => c.Nombre == name && c.UserName == username);
             return _mapper.Map<CategoriaDTO>(categoria);
         }
+
+        public async Task<ICollection<CategoriaDTO>> GetCategoriasByUserConComentarios(string username, DateTime? ini, DateTime? fin)
+        {
+            ICollection<Categoria> categorias = await _db.Categoria
+                .Where(c => c.UserName == username)
+                .Include(c => c.Productos)
+                    .ThenInclude(p => p.Comentarios.Where(com => com.Fecha >= ini && com.Fecha <= fin))
+                .ToListAsync();
+            return _mapper.Map<ICollection<CategoriaDTO>>(categorias);
+        }
+        public async Task<ICollection<CategoriaDTO>> GetCategoriasByUserConComentariosFiltroIds(string username, DateTime? ini, DateTime? fin, ICollection<int> categoriasIds)
+        {
+            ICollection<Categoria> categorias = await _db.Categoria
+                .Where(c => c.UserName == username && categoriasIds.Contains(c.Id))
+                .Include(c => c.Productos)
+                    .ThenInclude(p => p.Comentarios.Where(com => com.Fecha >= ini && com.Fecha <= fin))
+                .ToListAsync();
+            return _mapper.Map<ICollection<CategoriaDTO>>(categorias);
+        }
     }
 }

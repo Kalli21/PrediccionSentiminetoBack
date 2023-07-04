@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Models.Request;
 using PrediccionSentiminetoBack.Repository;
 using PrediccionSentiminetoBack.Repository.Interfaces;
 using PrediccionSentiminetoBack.Services.Interfaces;
@@ -179,6 +180,46 @@ namespace PrediccionSentiminetoBack.Services
                 _response.DisplayMessage = "Información de la categoria del usuario";
                 return new OkObjectResult(_response);
             }
+        }
+
+        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasByUserConComentarios(string username, CategoriasFiltros filtros)
+        {
+            try
+            {
+                object lista = await GetCategoriasByuserConComentariosByFiltro(username, filtros);
+                _response.Result = lista;
+                _response.DisplayMessage = "Lista de Categorias por usuario";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+
+            return new OkObjectResult(_response);
+        }
+
+        private async Task<object> GetCategoriasByuserConComentariosByFiltro(string username, CategoriasFiltros filtros)
+        {
+            if (filtros == null)
+            {
+                filtros = new CategoriasFiltros();
+            }
+            if (filtros.fechaIni == null)
+            {
+                filtros.fechaIni = DateTime.MinValue;
+            }
+            if (filtros.fechaFin == null)
+            {
+                filtros.fechaFin = DateTime.MaxValue;
+            }
+
+            if (filtros.categoriasId != null && filtros.categoriasId.Count != 0)
+            {
+                return await _categoriaRepository.GetCategoriasByUserConComentariosFiltroIds(username, filtros.fechaIni, filtros.fechaFin, filtros.categoriasId);
+
+            }
+            return await _categoriaRepository.GetCategoriasByUserConComentarios(username,filtros.fechaIni,filtros.fechaFin);
         }
     }
 }

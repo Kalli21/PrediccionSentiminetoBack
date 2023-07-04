@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrediccionSentiminetoBack.Models;
 using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Models.Request;
 using PrediccionSentiminetoBack.Services;
 using PrediccionSentiminetoBack.Services.Interfaces;
 
@@ -64,17 +65,32 @@ namespace PrediccionSentiminetoBack.Controllers
         }
 
         // GET: api/Comentario/username
-        [HttpGet("username/{username}")]
-        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetCategoriaByUser(string username)
+        [HttpPost("username/{username}")]
+        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByUser(string username,ComentariosFiltros filtros)
         {
-            return await _comentarioService.GetComentariosByUser(username);
+            return await _comentarioService.GetComentariosByUser(username, filtros);
         }
+
+        // GET: api/Comentario/cant/username
+        [HttpPost("username/cant/{username}")]
+        public async Task<ActionResult<int>> GetCantComentariosByUser(string username)
+        {
+            return await _comentarioService.GetCantComentariosByUser(username);
+        }
+
 
         // GET: api/Comentario/username/5
         [HttpGet("username/{username}/{id}")]
-        public async Task<ActionResult<ComentarioDTO>> GetCategoriaByUserAndId(string username, int id)
+        public async Task<ActionResult<ComentarioDTO>> GetComentarioByIdByUser(string username, int id)
         {
             return await _comentarioService.GetComentarioByIdByUser(username, id);
+        }
+
+        // GET: api/Comentarios con paginación
+        [HttpGet("username/pagina/{username}")]
+        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByuserByPaginacion(string username,int page = 1, int pageSize = 10)
+        {
+            return await _comentarioService.GetComentariosByuserByPaginacion(username, page, pageSize );
         }
 
     }

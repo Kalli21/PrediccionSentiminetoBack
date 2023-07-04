@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Models.Request;
 using PrediccionSentiminetoBack.Repository;
 using PrediccionSentiminetoBack.Repository.Interfaces;
 using PrediccionSentiminetoBack.Services.Interfaces;
@@ -145,11 +146,11 @@ namespace PrediccionSentiminetoBack.Services
             }
         }
 
-        public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductosByUser(int userid)
+        public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductosByUser(int userid, ProductosFiltros filtros)
         {
             try
             {
-                var lista = await _productoRepository.GetProductosByUser(userid);
+                ICollection<ProductoDTO> lista = await GetProductosByUserByFiltros(userid,filtros);
                 _response.Result = lista;
                 _response.DisplayMessage = "Lista de Productos del usuario";
             }
@@ -162,5 +163,14 @@ namespace PrediccionSentiminetoBack.Services
             return new OkObjectResult(_response);
         }
 
+        private async Task<ICollection<ProductoDTO>> GetProductosByUserByFiltros(int userid, ProductosFiltros filtros)
+        {
+            if (filtros == null || filtros.nombre == null)
+            {
+                return await _productoRepository.GetProductosByUser(userid);
+            }
+            
+            return await _productoRepository.GetProductosByUserByName(userid,filtros.nombre);
+        }
     }
 }

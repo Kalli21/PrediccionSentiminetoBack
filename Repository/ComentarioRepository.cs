@@ -73,6 +73,32 @@ namespace PrediccionSentiminetoBack.Repository
             return _mapper.Map<ComentarioDTO>(comentario);
         }
 
+        public async Task<ICollection<ComentarioDTO>> GetComentariosByUserByDate(string username, DateTime? ini, DateTime? fin)
+        {
+            ICollection<Comentario> categorias = await _db.Comentario.Where(c => c.UserName == username && c.Fecha >= ini && c.Fecha <= fin).ToListAsync();
+            return _mapper.Map<ICollection<ComentarioDTO>>(categorias);
+        }
 
+        public async Task<ICollection<ComentarioDTO>> GetComentariosByUserByDateAndProduct(string username,DateTime? ini, DateTime? fin, int idProducto)
+        {
+            ICollection<Comentario> categorias = await _db.Comentario.Where(c => c.UserName == username && c.ProductoId == idProducto && c.Fecha >= ini && c.Fecha <= fin).ToListAsync();
+            return _mapper.Map<ICollection<ComentarioDTO>>(categorias);
+        }
+
+        public async Task<ICollection<ComentarioDTO>> GetComentariosByuserByPaginacion(string username, int page, int pageSize)
+        {
+            ICollection<Comentario> comentarios = await _db.Comentario.Skip((page - 1) * pageSize).Take(pageSize)
+                .Where(c => c.UserName == username).ToListAsync();
+            return _mapper.Map<ICollection<ComentarioDTO>>(comentarios);
+
+        }
+
+        public async Task<int> GetCantComentariosByUser(string username)
+        {
+            int cantidadComentarios = await _db.Comentario
+                .Where(c => c.UserName == username)
+                .CountAsync();
+            return cantidadComentarios;
+        }
     }
 }

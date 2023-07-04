@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore; 
 using PrediccionSentiminetoBack.Models;
 using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Models.Request;
 using PrediccionSentiminetoBack.Services;
 using PrediccionSentiminetoBack.Services.Interfaces;
 
@@ -83,5 +84,11 @@ namespace PrediccionSentiminetoBack.Controllers
             return await _categoriaService.GetCategoriaByNameByUser(username, name);
         }
 
+        // GET: api/Categoria/username
+        [HttpPost("username/coment/{username}")]
+        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriaByUserConComentarios(string username, CategoriasFiltros filtros)
+        {
+            return await _categoriaService.GetCategoriasByUserConComentarios(username, filtros);
+        }
     }
 }

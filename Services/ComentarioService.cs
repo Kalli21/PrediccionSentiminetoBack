@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Models.Request;
 using PrediccionSentiminetoBack.Repository;
 using PrediccionSentiminetoBack.Repository.Interfaces;
 using PrediccionSentiminetoBack.Services.Interfaces;
@@ -135,11 +136,27 @@ namespace PrediccionSentiminetoBack.Services
             }
         }
 
-        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByUser(string username)
+        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByUser(string username,ComentariosFiltros filtros)
         {
             try
             {
-                var lista = await _comentarioRepository.GetComentariosByUser(username);
+                ICollection<ComentarioDTO> lista = await GetComentariosByuserByFiltro(username, filtros);
+                _response.Result = lista;
+                _response.DisplayMessage = "Lista de Comentarios del usuario";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+
+            return new OkObjectResult(_response);
+        }
+        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByuserByPaginacion(string username, int page, int pageSize)
+        {
+            try
+            {
+                ICollection<ComentarioDTO> lista = await _comentarioRepository.GetComentariosByuserByPaginacion(username, page, pageSize);
                 _response.Result = lista;
                 _response.DisplayMessage = "Lista de Comentarios del usuario";
             }
@@ -152,6 +169,49 @@ namespace PrediccionSentiminetoBack.Services
             return new OkObjectResult(_response);
         }
 
+
+        private async Task<ICollection<ComentarioDTO>> GetComentariosByuserByFiltro(string username, ComentariosFiltros filtros)
+        {
+            if (filtros == null) {
+                return await _comentarioRepository.GetComentariosByUser(username);
+            }
+            if (filtros.fechaIni == null)
+            {
+                filtros.fechaIni = DateTime.MinValue;
+            }
+            if (filtros.fechaFin == null)
+            {
+                filtros.fechaFin = DateTime.MaxValue;
+            }
+
+            if (filtros.idProducto !=null)
+            {
+                return await _comentarioRepository.GetComentariosByUserByDateAndProduct(username, filtros.fechaIni, filtros.fechaFin, (int)filtros.idProducto);
+
+            }
+
+            return await _comentarioRepository.GetComentariosByUserByDate(username,filtros.fechaIni,filtros.fechaFin);
+           
+
+        }
+
+        public async Task<ActionResult<int>> GetCantComentariosByUser(string username)
+        {
+            try
+            {
+                int cant = await _comentarioRepository.GetCantComentariosByUser(username);
+                _response.Result = cant;
+                _response.DisplayMessage = "Cantidad de Comentarios del usuario";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Result = 0;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+
+            return new OkObjectResult(_response);
+        }
     }
 }
 

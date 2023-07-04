@@ -83,8 +83,18 @@ namespace PrediccionSentiminetoBack.Repository
 
         public async Task<ProductoDTO> GetProductoByIdByUser(int userid, int id)
         {
-            Producto producto = await _db.Producto.Include(c => c.Categorias).FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userid);
+            Producto producto = await _db.Producto.Include(c => c.Categorias).Include(c => c.Comentarios).FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == userid);
             return _mapper.Map<ProductoDTO>(producto);
         }
+
+        public async Task<ICollection<ProductoDTO>> GetProductosByUserByName(int userid, string nombre)
+        {
+            ICollection<Producto> productos = await _db.Producto
+                .Where(c => c.UsuarioId == userid && c.Nombre.ToLower().Contains(nombre.ToLower()))
+                .ToListAsync();
+            return _mapper.Map<ICollection<ProductoDTO>>(productos);
+        }
+
+
     }
 }

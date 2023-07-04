@@ -11,5 +11,12 @@ namespace PrediccionSentiminetoBack.Repository.Interfaces
         Task<bool> DeleteComentario(int id);
         Task<ICollection<ComentarioDTO>> GetComentariosByUser(string username);
         Task<ComentarioDTO> GetComentarioByIdByUser(string username, int id);
+
+        Task<int> GetCantComentariosByUser(string username);
+
+        Task<ICollection<ComentarioDTO>> GetComentariosByUserByDate(string username, DateTime? ini, DateTime? fin);
+        Task<ICollection<ComentarioDTO>> GetComentariosByUserByDateAndProduct(string username, DateTime? ini, DateTime? fin, int idProducto);
+        Task<ICollection<ComentarioDTO>> GetComentariosByuserByPaginacion(string username, int page, int pageSize);
+        
     }
 }
