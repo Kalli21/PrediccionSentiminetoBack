@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -11,7 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Conexion BD
 builder.Services.AddDbContext<PrediccionSentiminetoBackContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("cnLocal") ?? throw new InvalidOperationException("cnLocal string 'cnLocal' not found.")));
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("cnLocal") ?? throw new InvalidOperationException("cnLocal string 'cnLocal' not found."))
+    options.UseNpgsql(builder.Configuration.GetConnectionString("postgresSQL") ?? throw new InvalidOperationException("cnLocal string 'cnLocal' not found."))
+    );
 
 //Mapper configuration
 IMapper mapper = MappingConf.RegisterMaps().CreateMapper();
@@ -64,13 +67,19 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
 //    app.UseSwagger();
 //    app.UseSwaggerUI();
 //}
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
+app.UseAuthentication();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
