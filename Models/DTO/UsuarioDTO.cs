@@ -1,4 +1,6 @@
-﻿namespace PrediccionSentiminetoBack.Models.DTO
+﻿using System.ComponentModel;
+
+namespace PrediccionSentiminetoBack.Models.DTO
 {
     public class UsuarioDTO
     {
@@ -9,6 +11,9 @@
         public string? Password { get; set; }
         public string? Token { get; set; }
         public bool activo { get; set; }
+        [DefaultValue(1)]
+        public int Estado { get; set; } = 1;
         public virtual ICollection<Producto> ?Productos { get; set; }
+        public virtual ICollection<Archivo>? Archivos { get; set; }
     }
 }

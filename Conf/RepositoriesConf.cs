@@ -12,6 +12,7 @@ namespace PrediccionSentiminetoBack.Conf
             builder.Services.AddScoped<IComentarioRepository, ComentarioRepository>();
             builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            builder.Services.AddScoped<IArchivoRepository, ArchivoRepository>();
 
         }
     }

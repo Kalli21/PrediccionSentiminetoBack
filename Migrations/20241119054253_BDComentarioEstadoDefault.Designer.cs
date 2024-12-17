@@ -2,17 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace PrediccionSentiminetoBack.Migrations
 {
     [DbContext(typeof(PrediccionSentiminetoBackContext))]
-    [Migration("20230706040709_postgres")]
-    partial class postgres
+    [Migration("20241119054253_BDComentarioEstadoDefault")]
+    partial class BDComentarioEstadoDefault
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,17 +20,17 @@ namespace PrediccionSentiminetoBack.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("CategoriaProducto", b =>
                 {
                     b.Property<int>("CategoriasId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductosId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("CategoriasId", "ProductosId");
 
@@ -39,21 +39,50 @@ namespace PrediccionSentiminetoBack.Migrations
                     b.ToTable("CategoriaProducto");
                 });
 
+            modelBuilder.Entity("PrediccionSentiminetoBack.Models.Archivo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Separador")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Archivo");
+                });
+
             modelBuilder.Entity("PrediccionSentiminetoBack.Models.Categoria", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -64,21 +93,21 @@ namespace PrediccionSentiminetoBack.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CodCliente")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -89,24 +118,27 @@ namespace PrediccionSentiminetoBack.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClienteId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("Contenido")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Estado")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Fecha")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("ProductoId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -121,28 +153,28 @@ namespace PrediccionSentiminetoBack.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CodProducto")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Descripcion")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("Precio")
                         .HasColumnType("real");
 
                     b.Property<string>("UrlImg")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UsuarioId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -155,30 +187,30 @@ namespace PrediccionSentiminetoBack.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Correo")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombres")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("bytea");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
-                        .HasColumnType("bytea");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("activo")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -196,6 +228,15 @@ namespace PrediccionSentiminetoBack.Migrations
                     b.HasOne("PrediccionSentiminetoBack.Models.Producto", null)
                         .WithMany()
                         .HasForeignKey("ProductosId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrediccionSentiminetoBack.Models.Archivo", b =>
+                {
+                    b.HasOne("PrediccionSentiminetoBack.Models.Usuario", null)
+                        .WithMany("Archivos")
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -236,6 +277,8 @@ namespace PrediccionSentiminetoBack.Migrations
 
             modelBuilder.Entity("PrediccionSentiminetoBack.Models.Usuario", b =>
                 {
+                    b.Navigation("Archivos");
+
                     b.Navigation("Productos");
                 });
 #pragma warning restore 612, 618

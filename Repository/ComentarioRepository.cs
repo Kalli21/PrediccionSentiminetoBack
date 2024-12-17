@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PrediccionSentiminetoBack.Models;
 using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Models.Request;
 using PrediccionSentiminetoBack.Repository.Interfaces;
 
 namespace PrediccionSentiminetoBack.Repository
@@ -50,8 +51,8 @@ namespace PrediccionSentiminetoBack.Repository
 
         public async Task<ICollection<ComentarioDTO>> GetComentarios()
         {
-            ICollection<Comentario> categorias = await _db.Comentario.ToListAsync();
-            return _mapper.Map<ICollection<ComentarioDTO>>(categorias);
+            ICollection<Comentario> comentarios = await _db.Comentario.ToListAsync();
+            return _mapper.Map<ICollection<ComentarioDTO>>(comentarios);
         }
 
         public async Task<ComentarioDTO> UpdateComentario(ComentarioDTO comentarioDTO)
@@ -75,14 +76,14 @@ namespace PrediccionSentiminetoBack.Repository
 
         public async Task<ICollection<ComentarioDTO>> GetComentariosByUserByDate(string username, DateTime? ini, DateTime? fin)
         {
-            ICollection<Comentario> categorias = await _db.Comentario.Where(c => c.UserName == username && c.Fecha >= ini && c.Fecha <= fin).ToListAsync();
-            return _mapper.Map<ICollection<ComentarioDTO>>(categorias);
+            ICollection<Comentario> comentarios = await _db.Comentario.Where(c => c.UserName == username && c.Fecha >= ini && c.Fecha <= fin).ToListAsync();
+            return _mapper.Map<ICollection<ComentarioDTO>>(comentarios);
         }
 
-        public async Task<ICollection<ComentarioDTO>> GetComentariosByUserByDateAndProduct(string username,DateTime? ini, DateTime? fin, int idProducto)
+        public async Task<ICollection<ComentarioDTO>> GetComentariosByUserByDateAndProduct(string username, DateTime? ini, DateTime? fin, int idProducto)
         {
-            ICollection<Comentario> categorias = await _db.Comentario.Where(c => c.UserName == username && c.ProductoId == idProducto && c.Fecha >= ini && c.Fecha <= fin).ToListAsync();
-            return _mapper.Map<ICollection<ComentarioDTO>>(categorias);
+            ICollection<Comentario> comentarios = await _db.Comentario.Where(c => c.UserName == username && c.ProductoId == idProducto && c.Fecha >= ini && c.Fecha <= fin).ToListAsync();
+            return _mapper.Map<ICollection<ComentarioDTO>>(comentarios);
         }
 
         public async Task<ICollection<ComentarioDTO>> GetComentariosByuserByPaginacion(string username, int page, int pageSize)
@@ -99,6 +100,34 @@ namespace PrediccionSentiminetoBack.Repository
                 .Where(c => c.UserName == username)
                 .CountAsync();
             return cantidadComentarios;
+        }
+
+        public async Task<ICollection<RelacionComCatDTO>> GetComentariosReducidoConCategorias(ComentariosFiltros? filtros)
+        {
+            List<RelacionComCatDTO> resultado = await _db.Comentario
+                .Where(c => c.Producto != null &&
+                    (filtros == null ||
+                        ((filtros.fechaIni == null || c.Fecha >= filtros.fechaIni) &&
+                         (filtros.fechaFin == null || c.Fecha <= filtros.fechaFin) &&
+                         (filtros.userName == null || c.UserName.Equals(filtros.userName)) && 
+                         (filtros.idProducto == null || c.ProductoId == filtros.idProducto))
+                         ))
+                .SelectMany(c => c.Producto.Categorias
+                    .Where(cat => filtros == null || filtros.categoriasId == null || filtros.categoriasId.Count() > 0 || filtros.categoriasId.Contains(cat.Id)) // Filtro adicional para categorías
+                    .Select(cat => new RelacionComCatDTO
+                    {
+                        IdComentario = c.Id,
+                        IdCategoria = cat.Id,
+                        CodMes = c.Fecha.HasValue ? c.Fecha.Value.ToString("yyyyMM") : null,
+                        NombreCategoria = cat.Nombre,
+                        NombreProducto = c.Producto.Nombre,
+                        CodCliente = c.Cliente.CodCliente
+                    })
+                )
+                .ToListAsync();
+
+            return resultado;
+
         }
     }
 }

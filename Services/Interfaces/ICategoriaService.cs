@@ -14,6 +14,6 @@ namespace PrediccionSentiminetoBack.Services.Interfaces
         Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasByUser(string username);
         Task<ActionResult<CategoriaDTO>> GetCategoriaByIdByUser(string usernamem,int id);
         Task<ActionResult<CategoriaDTO>> GetCategoriaByNameByUser(string usernamem, string name);
-        Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasByUserConComentarios(string username, CategoriasFiltros filtros);
+        Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasByUserConComentarios(string username, CategoriasFiltros? filtros);
     }
 }

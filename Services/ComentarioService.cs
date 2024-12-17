@@ -136,7 +136,7 @@ namespace PrediccionSentiminetoBack.Services
             }
         }
 
-        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByUser(string username,ComentariosFiltros filtros)
+        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByUser(string username,ComentariosFiltros? filtros)
         {
             try
             {
@@ -170,7 +170,7 @@ namespace PrediccionSentiminetoBack.Services
         }
 
 
-        private async Task<ICollection<ComentarioDTO>> GetComentariosByuserByFiltro(string username, ComentariosFiltros filtros)
+        private async Task<ICollection<ComentarioDTO>> GetComentariosByuserByFiltro(string username, ComentariosFiltros? filtros)
         {
             if (filtros == null) {
                 return await _comentarioRepository.GetComentariosByUser(username);
@@ -207,6 +207,23 @@ namespace PrediccionSentiminetoBack.Services
             {
                 _response.IsSuccess = false;
                 _response.Result = 0;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+
+            return new OkObjectResult(_response);
+        }
+
+        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosReducidoConCategorias(ComentariosFiltros? filtros)
+        {
+            try
+            {
+                var lista = await _comentarioRepository.GetComentariosReducidoConCategorias(filtros);
+                _response.Result = lista;
+                _response.DisplayMessage = "Lista de id Comentarios con Categorias";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.ToString() };
             }
 

@@ -31,7 +31,6 @@ namespace PrediccionSentiminetoBack.Services
                 }
                 else
                 {
-                    _response.IsSuccess = false;
                     _response.Result = exist;
                     _response.DisplayMessage = "El Cliente ya existe en el Usuario";
                     return new OkObjectResult(_response);

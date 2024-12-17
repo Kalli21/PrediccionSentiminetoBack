@@ -12,8 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Conexion BD
 builder.Services.AddDbContext<PrediccionSentiminetoBackContext>(options =>
-    //options.UseSqlServer(builder.Configuration.GetConnectionString("cnLocal") ?? throw new InvalidOperationException("cnLocal string 'cnLocal' not found."))
-    options.UseNpgsql(builder.Configuration.GetConnectionString("postgresSQL") ?? throw new InvalidOperationException("cnLocal string 'cnLocal' not found."))
+    options.UseSqlServer(builder.Configuration.GetConnectionString("cnLocal") ?? throw new InvalidOperationException("cnLocal string 'cnLocal' not found."))
+    //options.UseNpgsql(builder.Configuration.GetConnectionString("postgresSQL") ?? throw new InvalidOperationException("cnLocal string 'cnLocal' not found."))
     );
 
 //Mapper configuration

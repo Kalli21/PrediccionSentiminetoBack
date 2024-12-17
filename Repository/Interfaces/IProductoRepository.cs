@@ -1,4 +1,5 @@
-﻿using PrediccionSentiminetoBack.Models.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using PrediccionSentiminetoBack.Models.DTO;
 
 namespace PrediccionSentiminetoBack.Repository.Interfaces
 {
@@ -14,6 +15,7 @@ namespace PrediccionSentiminetoBack.Repository.Interfaces
         Task<ProductoDTO> GetProductoByIdByUser(int userid, int id);
 
         Task<ICollection<ProductoDTO>> GetProductosByUserByName(int userid, string nombre);
+        Task<ProductoDTO> AddCategoriaInProductoById(int idProd, int idCat);
 
     }
 }

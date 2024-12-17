@@ -31,7 +31,6 @@ namespace PrediccionSentiminetoBack.Services
                 }
                 else
                 {
-                    _response.IsSuccess = false;
                     _response.Result = exist;
                     _response.DisplayMessage = "La Categoria ya existe en el Usuario";
                     return new OkObjectResult(_response);
@@ -182,7 +181,7 @@ namespace PrediccionSentiminetoBack.Services
             }
         }
 
-        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasByUserConComentarios(string username, CategoriasFiltros filtros)
+        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasByUserConComentarios(string username, CategoriasFiltros? filtros)
         {
             try
             {
@@ -199,7 +198,7 @@ namespace PrediccionSentiminetoBack.Services
             return new OkObjectResult(_response);
         }
 
-        private async Task<object> GetCategoriasByuserConComentariosByFiltro(string username, CategoriasFiltros filtros)
+        private async Task<object> GetCategoriasByuserConComentariosByFiltro(string username, CategoriasFiltros? filtros)
         {
             if (filtros == null)
             {

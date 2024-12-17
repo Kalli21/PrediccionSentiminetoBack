@@ -29,7 +29,6 @@ namespace PrediccionSentiminetoBack.Services
                     return new CreatedAtActionResult("GetProducto", "Producto", new { id = model.Id }, _response);
                 }
                 else {
-                    _response.IsSuccess = false;
                     _response.Result = exist;
                     _response.DisplayMessage = "El Producto ya existe en el Usuario";
                     return new OkObjectResult(_response);
@@ -171,6 +170,24 @@ namespace PrediccionSentiminetoBack.Services
             }
             
             return await _productoRepository.GetProductosByUserByName(userid,filtros.nombre);
+        }
+
+        public async Task<ActionResult<ProductoDTO>> AddCategoriaInProductoById(int idProd, int idCat)
+        {
+            var producto = await _productoRepository.AddCategoriaInProductoById(idProd, idCat);
+            if (producto == null)
+            {
+                _response.IsSuccess = false;
+                _response.DisplayMessage = "No se pudo agregar la categoria al producto.";
+                return new NotFoundObjectResult(_response);
+
+            }
+            else
+            {
+                _response.Result = producto;
+                _response.DisplayMessage = "Información del producto";
+                return new OkObjectResult(_response);
+            }
         }
     }
 }

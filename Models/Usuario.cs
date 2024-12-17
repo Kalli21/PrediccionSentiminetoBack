@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace PrediccionSentiminetoBack.Models
 {
@@ -19,6 +20,10 @@ namespace PrediccionSentiminetoBack.Models
         [Required]
         public byte[]? PasswordSalt { get; set; }
 
+        [DefaultValue(1)]
+        public int Estado { get; set; } = 1;
+
         public virtual ICollection<Producto>? Productos { get; set; }
+        public virtual ICollection<Archivo>? Archivos { get; set; }
     }
 }

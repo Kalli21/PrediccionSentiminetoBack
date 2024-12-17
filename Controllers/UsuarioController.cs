@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -58,9 +59,7 @@ namespace PrediccionSentiminetoBack.Controllers
         public async Task<IActionResult> PutUsuario(string id, UsuarioDTO usuarioDTO)
         {
             return await _usuarioService.UpdateUser(id, usuarioDTO);
-        }
-
- 
+        } 
 
         // DELETE: api/Usuario/5
         [HttpDelete("{id}")]
@@ -68,6 +67,21 @@ namespace PrediccionSentiminetoBack.Controllers
         public async Task<IActionResult> DeleteUsuario(string id)
         {
             return await _usuarioService.DeleteUser(id);
+        }
+
+        // DELETE: api/Usuario/5
+        [HttpDelete("Informacion/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteInfoUsuario(string id)
+        {
+            return await _usuarioService.DeleteUserInfo(id);
+        }
+
+        [HttpGet("Autorizacion")]
+        [Authorize] // El middleware valida el token automáticamente
+        public async Task<IActionResult> Autorizacion()
+        {
+            return await _usuarioService.Autorizacion();
         }
 
     }

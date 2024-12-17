@@ -77,5 +77,12 @@ namespace PrediccionSentiminetoBack.Controllers
             return await _productoService.GetProductoByIdByUser(userid, id);
         }
 
+        // GET: api/Producto/5
+        [HttpGet("addCategoria/{idProd}/{idCat}")]
+        public async Task<ActionResult<ProductoDTO>> GetProducto(int idProd, int idCat)
+        {
+            return await _productoService.AddCategoriaInProductoById(idProd, idCat);
+        }
+
     }
 }

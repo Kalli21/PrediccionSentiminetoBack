@@ -12,5 +12,8 @@ namespace PrediccionSentiminetoBack.Services.Interfaces
         Task<ActionResult<UsuarioDTO>> GetUserById(string username);
         Task<IActionResult> UpdateUser(string username, UsuarioDTO usuarioDTO);
         Task<IActionResult> DeleteUser(string username);
+        Task<IActionResult> Autorizacion();
+        Task<IActionResult> DeleteUserInfo(string username);
+
     }
 }

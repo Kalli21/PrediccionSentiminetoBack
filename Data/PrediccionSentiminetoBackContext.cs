@@ -31,4 +31,5 @@ using PrediccionSentiminetoBack.Models;
         public DbSet<PrediccionSentiminetoBack.Models.Producto>? Producto { get; set; }
 
         public DbSet<PrediccionSentiminetoBack.Models.Usuario>? Usuario { get; set; }
-    }
+    public DbSet<PrediccionSentiminetoBack.Models.Archivo>? Archivo { get; set; }
+}

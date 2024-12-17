@@ -1,4 +1,6 @@
-﻿using PrediccionSentiminetoBack.Models.DTO;
+﻿using Microsoft.VisualBasic;
+using PrediccionSentiminetoBack.Models.DTO;
+using PrediccionSentiminetoBack.Models.Request;
 
 namespace PrediccionSentiminetoBack.Repository.Interfaces
 {
@@ -17,6 +19,7 @@ namespace PrediccionSentiminetoBack.Repository.Interfaces
         Task<ICollection<ComentarioDTO>> GetComentariosByUserByDate(string username, DateTime? ini, DateTime? fin);
         Task<ICollection<ComentarioDTO>> GetComentariosByUserByDateAndProduct(string username, DateTime? ini, DateTime? fin, int idProducto);
         Task<ICollection<ComentarioDTO>> GetComentariosByuserByPaginacion(string username, int page, int pageSize);
-        
+        Task<ICollection<RelacionComCatDTO>> GetComentariosReducidoConCategorias(ComentariosFiltros? filtros);
+
     }
 }

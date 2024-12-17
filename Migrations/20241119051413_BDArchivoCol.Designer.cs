@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PrediccionSentiminetoBack.Migrations
 {
     [DbContext(typeof(PrediccionSentiminetoBackContext))]
-    partial class PrediccionSentiminetoBackContextModelSnapshot : ModelSnapshot
+    [Migration("20241119051413_BDArchivoCol")]
+    partial class BDArchivoCol
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,9 +128,6 @@ namespace PrediccionSentiminetoBack.Migrations
                     b.Property<string>("Contenido")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Estado")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("Fecha")
                         .HasColumnType("datetime2");
 
@@ -190,9 +190,6 @@ namespace PrediccionSentiminetoBack.Migrations
 
                     b.Property<string>("Correo")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Estado")
-                        .HasColumnType("int");
 
                     b.Property<string>("Nombres")
                         .HasColumnType("nvarchar(max)");

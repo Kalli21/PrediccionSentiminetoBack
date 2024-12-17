@@ -95,6 +95,29 @@ namespace PrediccionSentiminetoBack.Repository
             return _mapper.Map<ICollection<ProductoDTO>>(productos);
         }
 
+        public async Task<ProductoDTO> AddCategoriaInProductoById(int idProd, int idCat)
+        {
+            // Busca el producto y la categoría
+            var producto = _db.Producto
+                .Include(p => p.Categorias) // Incluye las relaciones existentes
+                .FirstOrDefault(p => p.Id == idProd);
 
+            var categoria = _db.Categoria
+                .Include(c => c.Productos) // Incluye las relaciones existentes
+                .FirstOrDefault(c => c.Id == idCat);
+
+            if (producto != null && categoria != null)
+            {
+                // Agrega la categoría al producto
+                if (!producto.Categorias.Contains(categoria)) // Evita duplicados
+                {
+                    producto.Categorias.Add(categoria);
+                }
+                // Guarda los cambios
+                _db.SaveChanges();
+            }
+
+            return _mapper.Map<ProductoDTO>(producto);
+        }
     }
 }

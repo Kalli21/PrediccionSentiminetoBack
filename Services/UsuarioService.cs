@@ -15,6 +15,14 @@ namespace PrediccionSentiminetoBack.Services
             _usuarioRepository = usuarioRepository;
             _response = new ResponseDTO();
         }
+
+        public async Task<IActionResult> Autorizacion()
+        {
+            _response.IsSuccess = true;
+            _response.DisplayMessage = "Usuario Valido";
+            return new OkObjectResult(_response);
+        }
+
         public async Task<IActionResult> DeleteUser(string username)
         {
             try
@@ -39,6 +47,23 @@ namespace PrediccionSentiminetoBack.Services
                 _response.ErrorMessages = new List<string> { ex.ToString() };
                 return new BadRequestObjectResult(_response);
 
+            }
+        }
+
+        public async Task<IActionResult> DeleteUserInfo(string username)
+        {
+            try
+            {
+                var lista = await _usuarioRepository.DeleteInfoUser(username);
+                _response.Result = lista;
+                _response.DisplayMessage = "Lista de Usuarios";
+                return new OkObjectResult(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+                return new BadRequestObjectResult(_response);
             }
         }
 
@@ -67,14 +92,16 @@ namespace PrediccionSentiminetoBack.Services
                 var lista = await _usuarioRepository.GetUsers();
                 _response.Result = lista;
                 _response.DisplayMessage = "Lista de Usuarios";
+                return new OkObjectResult(_response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.ToString() };
+                return new BadRequestObjectResult(_response);
             }
 
-            return new OkObjectResult(_response);
+            
         }
 
         public async Task<IActionResult> Login(UsuarioDTO user)

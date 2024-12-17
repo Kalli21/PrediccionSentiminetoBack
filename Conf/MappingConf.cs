@@ -25,6 +25,9 @@ namespace PrediccionSentiminetoBack.Conf
                 config.CreateMap<UsuarioDTO, Usuario>();
                 config.CreateMap<Usuario, UsuarioDTO>();
 
+                config.CreateMap<ArchivoDTO, Archivo>();
+                config.CreateMap<Archivo, ArchivoDTO>();
+
             });
             return mappingConfig;
         }

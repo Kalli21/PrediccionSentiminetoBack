@@ -40,7 +40,9 @@ namespace PrediccionSentiminetoBack.Repository
 
         public async Task<UsuarioDTO> GetUserById(string username)
         {
-            Usuario user = await _db.Usuario.Where(i => i.UserName == username).FirstOrDefaultAsync();
+            Usuario user = await _db.Usuario
+                .Include(u => u.Archivos)
+                .Where(i => i.UserName == username).FirstOrDefaultAsync();
             return _mapper.Map<UsuarioDTO>(user);
         }
 
@@ -110,8 +112,10 @@ namespace PrediccionSentiminetoBack.Repository
         public async Task<UsuarioDTO> UpdateUser(UsuarioDTO usuarioDTO)
         {
             Usuario user = _mapper.Map<UsuarioDTO, Usuario>(usuarioDTO);
-            Usuario auxU = await _db.Usuario.Where(i => i.UserName == usuarioDTO.UserName).FirstOrDefaultAsync();
+            Usuario auxU = await _db.Usuario.Where(i => i.UserName == usuarioDTO.UserName).AsNoTracking().FirstOrDefaultAsync();
             user.Id = auxU.Id;
+            user.PasswordHash = auxU.PasswordHash;
+            user.PasswordSalt = auxU.PasswordSalt;
             _db.Usuario.Update(user);
             await _db.SaveChangesAsync();
             return _mapper.Map<Usuario, UsuarioDTO>(user);
@@ -178,5 +182,35 @@ namespace PrediccionSentiminetoBack.Repository
             }
         }
 
+        public async Task<bool> DeleteInfoUser(string username)
+        {
+            UsuarioDTO usuarioDTO = await GetUserById(username);
+            usuarioDTO.Estado = 1;
+            // Cargar las categorías asociadas al usuario
+            var categorias = await _db.Categoria
+                .Where(c => c.UserName == username)
+                .Include(c => c.Productos) // Productos es la colección muchos a muchos
+                .ToListAsync();
+
+            // Eliminar las relaciones muchos a muchos (productos asociados a categorías)
+            foreach (var categoria in categorias)
+            {
+                categoria.Productos.Clear(); // Elimina las relaciones de la tabla intermedia
+            }
+
+            await _db.SaveChangesAsync();
+
+            // Eliminar categorías
+            _db.Categoria.RemoveRange(categorias);
+
+            // Eliminar otros registros
+            int resp = await _db.Comentario.Where(c => c.UserName.Equals(username)).ExecuteDeleteAsync();
+            await _db.Cliente.Where(c => c.UserName.Equals(username)).ExecuteDeleteAsync();
+            await _db.Producto.Where(c => c.UsuarioId == usuarioDTO.Id).ExecuteDeleteAsync();
+
+            await _db.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

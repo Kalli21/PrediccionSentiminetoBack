@@ -86,7 +86,7 @@ namespace PrediccionSentiminetoBack.Controllers
 
         // GET: api/Categoria/username
         [HttpPost("username/coment/{username}")]
-        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriaByUserConComentarios(string username, CategoriasFiltros filtros)
+        public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriaByUserConComentarios(string username, CategoriasFiltros? filtros = null)
         {
             return await _categoriaService.GetCategoriasByUserConComentarios(username, filtros);
         }

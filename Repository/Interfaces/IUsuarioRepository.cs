@@ -11,5 +11,7 @@ namespace PrediccionSentiminetoBack.Repository.Interfaces
         Task<UsuarioDTO> GetUserById(string username);
         Task<UsuarioDTO> UpdateUser(UsuarioDTO usuarioDTO);
         Task<bool> DeleteUser(string username);
+        Task<bool> DeleteInfoUser(string username);
+
     }
 }

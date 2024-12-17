@@ -92,6 +92,13 @@ namespace PrediccionSentiminetoBack.Controllers
         {
             return await _comentarioService.GetComentariosByuserByPaginacion(username, page, pageSize );
         }
+        
+        // GET: api/Comentario/username
+        [HttpPost("username")]
+        public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosReducidoConCategorias(ComentariosFiltros filtros)
+        {
+            return await _comentarioService.GetComentariosReducidoConCategorias(filtros);
+        }
 
     }
 }
