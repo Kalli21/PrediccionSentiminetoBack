@@ -4,6 +4,7 @@ using PrediccionSentiminetoBack.Models;
 using PrediccionSentiminetoBack.Models.DTO;
 using PrediccionSentiminetoBack.Models.Request;
 using PrediccionSentiminetoBack.Repository.Interfaces;
+using System.Drawing.Printing;
 
 namespace PrediccionSentiminetoBack.Repository
 {
@@ -104,14 +105,24 @@ namespace PrediccionSentiminetoBack.Repository
 
         public async Task<ICollection<RelacionComCatDTO>> GetComentariosReducidoConCategorias(ComentariosFiltros? filtros)
         {
-            List<RelacionComCatDTO> resultado = await _db.Comentario
-                .Where(c => c.Producto != null &&
-                    (filtros == null ||
-                        ((filtros.fechaIni == null || c.Fecha >= filtros.fechaIni) &&
-                         (filtros.fechaFin == null || c.Fecha <= filtros.fechaFin) &&
-                         (filtros.userName == null || c.UserName.Equals(filtros.userName)) && 
-                         (filtros.idProducto == null || c.ProductoId == filtros.idProducto))
-                         ))
+            var consulta = _db.Comentario
+            .Where(c => c.Producto != null &&
+                (filtros == null ||
+                    ((filtros.fechaIni == null || c.Fecha >= filtros.fechaIni) &&
+                     (filtros.fechaFin == null || c.Fecha <= filtros.fechaFin) &&
+                     (filtros.userName == null || c.UserName.Equals(filtros.userName)) &&
+                     (filtros.idProducto == null || c.ProductoId == filtros.idProducto))
+                )
+            );
+
+            var total = await consulta.CountAsync();
+            if (filtros.paginacion)
+            {
+                consulta = consulta.Skip((filtros.pageNumber - 1) * filtros.pageSize)
+                                    .Take(filtros.pageSize);
+            }
+
+            List<RelacionComCatDTO> resultado = await consulta
                 .SelectMany(c => c.Producto.Categorias
                     .Where(cat => filtros == null || filtros.categoriasId == null || filtros.categoriasId.Count() > 0 || filtros.categoriasId.Contains(cat.Id)) // Filtro adicional para categorías
                     .Select(cat => new RelacionComCatDTO
@@ -125,6 +136,9 @@ namespace PrediccionSentiminetoBack.Repository
                     })
                 )
                 .ToListAsync();
+
+            filtros.totalItems = total;
+            filtros.totalPages = (int)Math.Ceiling(filtros.totalItems / (double)filtros.pageSize);
 
             return resultado;
 

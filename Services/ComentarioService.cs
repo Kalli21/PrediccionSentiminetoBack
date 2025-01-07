@@ -218,6 +218,7 @@ namespace PrediccionSentiminetoBack.Services
             try
             {
                 var lista = await _comentarioRepository.GetComentariosReducidoConCategorias(filtros);
+                _response.FiltroInfo = filtros;
                 _response.Result = lista;
                 _response.DisplayMessage = "Lista de id Comentarios con Categorias";
             }

@@ -7,7 +7,8 @@ namespace PrediccionSentiminetoBack.Models
         [Key]
         public int Id { get; set; }        
         public string? Nombre { get; set; }
-        public string Separador { get; set; }
+        public string? Separador { get; set; }
+        public string? FinLinea { get; set; }
         public string Url { get; set; }
         public int UsuarioId { get; set; }
 
