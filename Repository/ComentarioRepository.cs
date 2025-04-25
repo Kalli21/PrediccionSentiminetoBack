@@ -124,7 +124,7 @@ namespace PrediccionSentiminetoBack.Repository
 
             List<RelacionComCatDTO> resultado = await consulta
                 .SelectMany(c => c.Producto.Categorias
-                    .Where(cat => filtros == null || filtros.categoriasId == null || filtros.categoriasId.Count() > 0 || filtros.categoriasId.Contains(cat.Id)) // Filtro adicional para categorías
+                    .Where(cat => filtros == null || filtros.categoriasId == null || filtros.categoriasId.Count() == 0 || filtros.categoriasId.Contains(cat.Id)) // Filtro adicional para categorías
                     .Select(cat => new RelacionComCatDTO
                     {
                         IdComentario = c.Id,
